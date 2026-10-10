@@ -22,7 +22,9 @@ This document tracks all explicit assumptions made during the design, data compi
 ## 3. Planner Assumptions
 - **Time Buffer**: At least 10% of total trip duration (`bufferPercent = 0.10`) is reserved as an unscheduled contingency buffer (`legs + dwell <= 0.9 * availableTime`).
 - **Meal Windows**: Lunch is 12:00-15:00, Dinner is 19:00-22:30. If the trip spans any meal window, at least one food stop (cafe, restaurant, street_food) is scheduled within it.
-- **Deterministic Search**: A seeded pseudorandom number generator (mulberry32 or PRNG) ensures that identical input + seed produces identical output tracks.
+- **Deterministic Search**: A seeded pseudorandom number generator (mulberry32) ensures that identical input + seed produces identical output tracks.
+- **Search Execution & Scalability**: Randomized greedy search extends partial paths candidate-by-candidate respecting non-consecutive category rules and category caps (cap 2 by default, 3 for active interest categories on 6h+ trips). 150-place candidate search executes in ~215ms (under the 300ms limit).
+- **Opening Times Invariant**: Stop arrival time reflects the effective start time at or after venue opening (`arrival >= open` and `departure <= close`), with wait time attributed to idle time.
 - **Clustering**: Category Jaccard distance produces 3 distinct cluster tracks whenever feasible. If the search space is constrained (e.g. extreme budget or duration), 1 or 2 tracks or a clear binding constraint explanation is returned.
 
 ## 4. Narration & Fallback Assumptions
